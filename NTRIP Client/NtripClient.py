@@ -218,7 +218,7 @@ class NtripClient(object):
                         try:
                             data=self.socket.recv(self.buffer)
                             debugDumpHexBytes(data, 0, len(data))
-                            # self.out.write(data)
+                            self.out.write(data)
                             if self.UDP_socket:
                                 self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
 #                            print datetime.datetime.now()-connectTime
