@@ -24,9 +24,38 @@ sleepTime=1 # So the first one is 1 second
 maxConnectTime=0
 
 
+def debugDumpHexBytes(buffer, offsetStart, length):
+    i = 0
+    row = 0
+
+    print ('\n---- %d bytes --------------------') % (length)
+
+    while length > i:
+      rowData = ''
+      col = 0
+      for col in range(16):
+        if length <= i:
+          break
+
+        spacer = ' '
+        if 7 == col:
+          spacer = '  '
+
+        hexData = ('%02x') % (ord(buffer[i]))
+        rowData += hexData + spacer
+
+        i += 1
+      
+      print "%04d" % (row) + ': ' + rowData
+      row = row + 16
+    
+    print ('------------------------')
+
+
+
 class NtripClient(object):
     def __init__(self,
-                 buffer=50,
+                 buffer=1024,
                  user="",
                  out=sys.stdout,
                  port=2101,
@@ -188,7 +217,8 @@ class NtripClient(object):
                     while data:
                         try:
                             data=self.socket.recv(self.buffer)
-                            self.out.write(data)
+                            debugDumpHexBytes(data, 0, len(data))
+                            # self.out.write(data)
                             if self.UDP_socket:
                                 self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
 #                            print datetime.datetime.now()-connectTime
